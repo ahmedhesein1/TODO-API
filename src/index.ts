@@ -4,7 +4,7 @@ import { DataSource } from 'typeorm';
 import mysql from 'mysql2/promise';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-
+import { Task } from './tasks/tasks.entity';
 dotenv.config();
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
