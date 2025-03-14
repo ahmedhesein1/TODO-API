@@ -19,6 +19,7 @@ const typeorm_1 = require("typeorm");
 const promise_1 = __importDefault(require("mysql2/promise"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
+const tasks_entity_1 = require("./tasks/tasks.entity");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 3000;
@@ -32,6 +33,7 @@ exports.AppDataSource = new typeorm_1.DataSource({
     username: process.env.MYSQL_USER,
     password: process.env.MYSQL_PASSWORD,
     database: process.env.MYSQL_DB,
+    entities: [tasks_entity_1.Task],
     synchronize: true,
 });
 const createDatabase = () => __awaiter(void 0, void 0, void 0, function* () {

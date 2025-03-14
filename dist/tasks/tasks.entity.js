@@ -11,6 +11,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Task = void 0;
 const typeorm_1 = require("typeorm");
+// import { Priority } from "../enums/Priority";
+// import { Status } from "../enums/Status";
 let Task = class Task {
 };
 exports.Task = Task;
@@ -18,6 +20,10 @@ __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
     __metadata("design:type", String)
 ], Task.prototype, "id", void 0);
+__decorate([
+    Column({}),
+    __metadata("design:type", String)
+], Task.prototype, "title", void 0);
 exports.Task = Task = __decorate([
     (0, typeorm_1.Entity)()
 ], Task);
