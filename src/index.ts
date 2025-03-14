@@ -1,9 +1,51 @@
-import express, { Express, Request, Response } from "express";
-import dotenv from "dotenv";
-import { DataSource } from "typeorm";
-const app: Express = express();
+import express, { Express } from 'express';
+import dotenv from 'dotenv';
+import { DataSource } from 'typeorm';
+import mysql from 'mysql2/promise';
+
 dotenv.config();
-const PORT = process.env.PORT;
-app.listen(PORT, () => {
-  console.log(`App listening on ${PORT}`);
+const app: Express = express();
+const PORT = process.env.PORT || 3000;
+
+// ✅ Define AppDataSource at the top level (don't put `export` inside a function)
+export const AppDataSource = new DataSource({
+  type: 'mysql',
+  host: process.env.MYSQL_HOST || 'localhost',
+  port: Number(process.env.MYSQL_PORT) || 3306,
+  username: process.env.MYSQL_USER,
+  password: process.env.MYSQL_PASSWORD,
+  database: process.env.MYSQL_DB,
+  synchronize: true,
+  logging: true,
+});
+
+const createDatabase = async () => {
+  const connection = await mysql.createConnection({
+    host: process.env.MYSQL_HOST || 'localhost',
+    port: Number(process.env.MYSQL_PORT) || 3306,
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
+  });
+
+  await connection.query(
+    `CREATE DATABASE IF NOT EXISTS \`${process.env.MYSQL_DB}\``,
+  );
+  await connection.end();
+  console.log('✅ Database ensured');
+};
+
+// Run this function before initializing TypeORM
+createDatabase().then(() => {
+  console.log('✅ Database check complete');
+
+  AppDataSource.initialize()
+    .then(() => {
+      console.log(`✅ Database initialized`);
+      app.listen(PORT, () => {
+        console.log(`🚀 App listening on ${PORT}`);
+      });
+    })
+    .catch((err) => {
+      console.error('❌ Error during initialization', err);
+    });
 });
