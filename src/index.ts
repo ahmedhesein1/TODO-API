@@ -4,6 +4,7 @@ import { DataSource } from 'typeorm';
 import mysql from 'mysql2/promise';
 import bodyParser from 'body-parser';
 import cors from 'cors';
+
 dotenv.config();
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
@@ -19,7 +20,6 @@ export const AppDataSource = new DataSource({
   password: process.env.MYSQL_PASSWORD,
   database: process.env.MYSQL_DB,
   synchronize: true,
-  logging: true,
 });
 
 const createDatabase = async () => {
