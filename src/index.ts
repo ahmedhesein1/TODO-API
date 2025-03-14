@@ -5,6 +5,8 @@ import mysql from 'mysql2/promise';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import { Task } from './tasks/tasks.entity';
+import { taskRouter } from './tasks/tasks.routes';
+
 dotenv.config();
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
@@ -53,3 +55,4 @@ createDatabase().then(() => {
       console.error('❌ Error during initialization', err);
     });
 });
+app.use('/tasks', taskRouter);
