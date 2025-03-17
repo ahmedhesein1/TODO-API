@@ -17,11 +17,10 @@ class TaskController {
     constructor(taskRepository = __1.AppDataSource.getRepository(tasks_entity_1.Task)) {
         this.taskRepository = taskRepository;
     }
-    getAll() {
+    getAll(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             let tasks = yield this.taskRepository.find();
-            tasks = (0, class_transformer_1.instanceToPlain)(tasks);
-            return tasks;
+            return (0, class_transformer_1.instanceToPlain)(tasks);
         });
     }
     createTask(taskData) {

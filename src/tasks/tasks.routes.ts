@@ -1,4 +1,4 @@
-import express, {
+import {
   Router,
   Request,
   Response,
@@ -7,6 +7,7 @@ import { taskController } from './tasks.controller';
 import asyncHandler from 'express-async-handler';
 import { createValidator } from './tasks.validator';
 import { Next } from 'mysql2/typings/mysql/lib/parsers/typeCast';
+import { validateRequest } from '../middlewares/validateRequest';
 
 export const taskRouter: Router = Router();
 
@@ -19,7 +20,7 @@ taskRouter.get(
 );
 taskRouter.post(
   '/',
-  createValidator,
+  createValidator,validateRequest,
   asyncHandler(
     async (req: Request, res: Response, next: Next) => {
       const newTask = await taskController.createTask(

@@ -1,16 +1,16 @@
 import { Task } from './tasks.entity';
 import { AppDataSource } from '..';
 import { instanceToPlain } from 'class-transformer';
+import { Response, Request } from 'express';
 class TaskController {
   constructor(
     private taskRepository = AppDataSource.getRepository(
       Task,
     ),
   ) {}
-  public async getAll(): Promise<Task[]> {
+  public async getAll(req:Request,res:Response):Promise<Response> {
     let tasks: Task[] = await this.taskRepository.find();
-    tasks = instanceToPlain(tasks) as Task[];
-    return tasks;
+    return instanceToPlain(tasks) as Task[];
   }
   public async createTask(taskData: {}): Promise<Task> {
     let newTask = this.taskRepository.create(taskData);

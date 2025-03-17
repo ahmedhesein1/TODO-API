@@ -1,11 +1,20 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.globalErrorHandler = void 0;
+const AppError_1 = __importDefault(require("./AppError")); // Ensure correct path
 const globalErrorHandler = (err, req, res, next) => {
-    res.status(err.statusCode || 500).json({
+    let statusCode = 500;
+    let message = 'Something went wrong';
+    if (err instanceof AppError_1.default) {
+        statusCode = err.statusCode;
+        message = err.message;
+    }
+    res.status(statusCode).json({
         success: false,
-        message: err.message || 'Something went wrong',
-        stack: err.stack,
+        message,
     });
 };
 exports.globalErrorHandler = globalErrorHandler;
