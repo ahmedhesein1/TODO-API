@@ -21,6 +21,7 @@ const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
 const tasks_entity_1 = require("./tasks/tasks.entity");
 const tasks_routes_1 = require("./tasks/tasks.routes");
+const globalErrorHandler_1 = require("./middlewares/globalErrorHandler");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 3000;
@@ -63,3 +64,4 @@ createDatabase().then(() => {
     });
 });
 app.use('/tasks', tasks_routes_1.taskRouter);
+app.use(globalErrorHandler_1.globalErrorHandler);

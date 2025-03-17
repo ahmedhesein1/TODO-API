@@ -6,6 +6,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import { Task } from './tasks/tasks.entity';
 import { taskRouter } from './tasks/tasks.routes';
+import { globalErrorHandler } from './middlewares/globalErrorHandler';
 
 dotenv.config();
 const app: Express = express();
@@ -56,3 +57,4 @@ createDatabase().then(() => {
     });
 });
 app.use('/tasks', taskRouter);
+app.use(globalErrorHandler);
