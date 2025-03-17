@@ -15,7 +15,7 @@ exports.createValidator = [
     (0, express_validator_1.body)('date')
         .not()
         .isEmpty()
-        .withMessage('The task Title is empty')
+        .withMessage('The task date is empty')
         .isString()
         .withMessage('The date valid format is string'),
     (0, express_validator_1.body)('description')
@@ -33,5 +33,5 @@ exports.createValidator = [
         Status_1.Status.inProgress,
         Status_1.Status.todo,
     ])
-        .withMessage('Priority must be completed,inProgress or todo'),
+        .withMessage('Status must be completed,inProgress or todo'),
 ];

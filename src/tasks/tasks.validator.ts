@@ -1,7 +1,6 @@
 import { body, ValidationChain } from 'express-validator';
 import { Priority } from '../enums/Priority';
 import { Status } from '../enums/Status';
-import { STATUS_CODES } from 'http';
 export const createValidator: ValidationChain[] = [
   body('title')
     .not()
@@ -13,7 +12,7 @@ export const createValidator: ValidationChain[] = [
   body('date')
     .not()
     .isEmpty()
-    .withMessage('The task Title is empty')
+    .withMessage('The task date is empty')
     .isString()
     .withMessage('The date valid format is string'),
   body('description')
@@ -32,6 +31,7 @@ export const createValidator: ValidationChain[] = [
       Status.todo,
     ])
     .withMessage(
-      'Priority must be completed,inProgress or todo',
+      'Status must be completed,inProgress or todo',
     ),
 ];
+

@@ -38,8 +38,13 @@ class TaskController {
             const task = yield this.taskRepository.findOneBy({
                 id: req.params.id,
             });
-            if (!task)
+            if (!task) {
                 return next(new AppError_1.default('No task Found', 404));
+            }
+            res.status(200).json({
+                success: true,
+                data: (0, class_transformer_1.instanceToPlain)(task),
+            });
         }));
         // ✅ Create a Task
         this.createTask = (0, express_async_handler_1.default)((req, res, next) => __awaiter(this, void 0, void 0, function* () {
@@ -59,15 +64,21 @@ class TaskController {
         }));
         // ✅ Update a Task
         this.updateTask = (0, express_async_handler_1.default)((req, res, next) => __awaiter(this, void 0, void 0, function* () {
-            const task = yield this.taskRepository.findOneBy({
-                id: req.params.id,
-            });
-            if (!task)
-                return next(new AppError_1.default('Task not Found', 404));
-            const updatedTask = yield this.taskRepository.update(req.params.id, req.body);
-            res.status(204).json({
+            const taskRepository = __1.AppDataSource.getRepository(tasks_entity_1.Task);
+            const { id } = req.params;
+            const updates = req.body; // Contains only fields to update
+            // Find existing task
+            const task = yield taskRepository.findOneBy({ id });
+            if (!task) {
+                return next(new AppError_1.default('Task not found', 404));
+            }
+            // Merge updates dynamically
+            Object.assign(task, updates);
+            // Save updated task
+            const updatedTask = yield taskRepository.save(task);
+            res.status(200).json({
                 success: true,
-                updatedTask: (0, class_transformer_1.instanceToPlain)(updatedTask),
+                data: (0, class_transformer_1.instanceToPlain)(updatedTask),
             });
         }));
         // ✅ Delete a Task
@@ -77,6 +88,7 @@ class TaskController {
             });
             if (!task)
                 return next(new AppError_1.default('Task not Found', 404));
+            yield this.taskRepository.delete(req.params.id);
             res.status(200).json({
                 success: true,
                 message: 'Task Successfully Deleted',

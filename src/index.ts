@@ -5,7 +5,6 @@ import mysql from 'mysql2/promise';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import { Task } from './tasks/tasks.entity';
-import { taskRouter } from './tasks/tasks.routes';
 import { globalErrorHandler } from './middlewares/globalErrorHandler';
 
 dotenv.config();
@@ -33,7 +32,7 @@ const createDatabase = async () => {
     user: process.env.MYSQL_USER,
     password: process.env.MYSQL_PASSWORD,
   });
-
+  
   await connection.query(
     `CREATE DATABASE IF NOT EXISTS \`${process.env.MYSQL_DB}\``,
   );
@@ -42,13 +41,14 @@ const createDatabase = async () => {
 };
 
 // Run this function before initializing TypeORM
+import { taskRouter } from './tasks/tasks.routes';
 app.use('/tasks', taskRouter);
 app.use(globalErrorHandler);
 createDatabase().then(() => {
   console.log('✅ Database check complete');
-
+  
   AppDataSource.initialize()
-    .then(() => {
+  .then(() => {
       console.log(`✅ Database initialized`);
       app.listen(PORT, () => {
         console.log(`🚀 App listening on ${PORT}`);

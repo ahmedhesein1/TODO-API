@@ -1,6 +1,9 @@
 import { Task } from './tasks.entity';
 import { AppDataSource } from '..';
-import { instanceToPlain } from 'class-transformer';
+import {
+  instanceToPlain,
+  plainToInstance,
+} from 'class-transformer';
 import {
   Response,
   Request,
@@ -9,10 +12,12 @@ import {
 } from 'express';
 import AppError from '../middlewares/AppError';
 import asyncHandler from 'express-async-handler';
+import { UpdateResult } from 'typeorm';
+
 class TaskController {
   private taskRepository =
     AppDataSource.getRepository(Task);
-    
+
   // ✅ Get All Tasks
   getAll = asyncHandler(
     async (
@@ -42,8 +47,14 @@ class TaskController {
       const task = await this.taskRepository.findOneBy({
         id: req.params.id,
       });
-      if (!task)
+      if (!task) {
         return next(new AppError('No task Found', 404));
+      }
+
+      res.status(200).json({
+        success: true,
+        data: instanceToPlain(task),
+      });
     },
   );
 
@@ -79,19 +90,26 @@ class TaskController {
       res: Response,
       next: NextFunction,
     ) => {
-      const task = await this.taskRepository.findOneBy({
-        id: req.params.id,
-      });
-      if (!task)
-        return next(new AppError('Task not Found', 404));
+      const taskRepository =
+        AppDataSource.getRepository(Task);
+      const { id } = req.params;
+      const updates = req.body; // Contains only fields to update
 
-      const updatedTask = await this.taskRepository.update(
-        req.params.id,
-        req.body,
-      );
-      res.status(204).json({
+      // Find existing task
+      const task = await taskRepository.findOneBy({ id });
+      if (!task) {
+        return next(new AppError('Task not found', 404));
+      }
+
+      // Merge updates dynamically
+      Object.assign(task, updates);
+
+      // Save updated task
+      const updatedTask = await taskRepository.save(task);
+
+      res.status(200).json({
         success: true,
-        updatedTask: instanceToPlain(updatedTask),
+        data: instanceToPlain(updatedTask),
       });
     },
   );
@@ -108,6 +126,7 @@ class TaskController {
       });
       if (!task)
         return next(new AppError('Task not Found', 404));
+      await this.taskRepository.delete(req.params.id);
       res.status(200).json({
         success: true,
         message: 'Task Successfully Deleted',

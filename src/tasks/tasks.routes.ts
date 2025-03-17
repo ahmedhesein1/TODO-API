@@ -16,9 +16,7 @@ taskRouter
 taskRouter
   .route('/:id')
   .get(taskController.getById)
-  .put(
-    createValidator,
-    validateRequest,
+  .patch(
     taskController.updateTask,
   )
   .delete(taskController.deleteTask);

@@ -9,14 +9,17 @@ export const globalErrorHandler = (
 ) => {
   let statusCode = 500;
   let message = 'Something went wrong';
+  let stack;
 
   if (err instanceof AppError) {
     statusCode = err.statusCode;
     message = err.message;
+    stack = err.stack;
   }
 
   res.status(statusCode).json({
     success: false,
     message,
+    stack
   });
 };

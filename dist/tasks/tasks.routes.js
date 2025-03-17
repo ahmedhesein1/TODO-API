@@ -13,5 +13,5 @@ exports.taskRouter
 exports.taskRouter
     .route('/:id')
     .get(tasks_controller_1.taskController.getById)
-    .put(tasks_validator_1.createValidator, validateRequest_1.validateRequest, tasks_controller_1.taskController.updateTask)
+    .patch(tasks_controller_1.taskController.updateTask)
     .delete(tasks_controller_1.taskController.deleteTask);

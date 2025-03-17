@@ -8,13 +8,16 @@ const AppError_1 = __importDefault(require("./AppError")); // Ensure correct pat
 const globalErrorHandler = (err, req, res, next) => {
     let statusCode = 500;
     let message = 'Something went wrong';
+    let stack;
     if (err instanceof AppError_1.default) {
         statusCode = err.statusCode;
         message = err.message;
+        stack = err.stack;
     }
     res.status(statusCode).json({
         success: false,
         message,
+        stack
     });
 };
 exports.globalErrorHandler = globalErrorHandler;

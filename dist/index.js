@@ -20,7 +20,6 @@ const promise_1 = __importDefault(require("mysql2/promise"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
 const tasks_entity_1 = require("./tasks/tasks.entity");
-const tasks_routes_1 = require("./tasks/tasks.routes");
 const globalErrorHandler_1 = require("./middlewares/globalErrorHandler");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
@@ -49,6 +48,7 @@ const createDatabase = () => __awaiter(void 0, void 0, void 0, function* () {
     console.log('✅ Database ensured');
 });
 // Run this function before initializing TypeORM
+const tasks_routes_1 = require("./tasks/tasks.routes");
 app.use('/tasks', tasks_routes_1.taskRouter);
 app.use(globalErrorHandler_1.globalErrorHandler);
 createDatabase().then(() => {
