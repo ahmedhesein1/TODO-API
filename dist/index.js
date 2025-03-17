@@ -27,7 +27,6 @@ const app = (0, express_1.default)();
 const PORT = process.env.PORT || 3000;
 app.use(body_parser_1.default.json());
 app.use((0, cors_1.default)());
-// ✅ Define AppDataSource at the top level (don't put `export` inside a function)
 exports.AppDataSource = new typeorm_1.DataSource({
     type: 'mysql',
     host: process.env.MYSQL_HOST || 'localhost',
@@ -50,6 +49,8 @@ const createDatabase = () => __awaiter(void 0, void 0, void 0, function* () {
     console.log('✅ Database ensured');
 });
 // Run this function before initializing TypeORM
+app.use('/tasks', tasks_routes_1.taskRouter);
+app.use(globalErrorHandler_1.globalErrorHandler);
 createDatabase().then(() => {
     console.log('✅ Database check complete');
     exports.AppDataSource.initialize()
@@ -63,5 +64,3 @@ createDatabase().then(() => {
         console.error('❌ Error during initialization', err);
     });
 });
-app.use('/tasks', tasks_routes_1.taskRouter);
-app.use(globalErrorHandler_1.globalErrorHandler);

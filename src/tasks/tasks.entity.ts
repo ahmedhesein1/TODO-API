@@ -17,6 +17,11 @@ export class Task {
   @Column({
     type: 'longtext',
   })
+  @Column({
+    type: 'varchar',
+    length: 255,
+  })
+  date: string;
   description: string;
   @Column({
     type: 'enum',
@@ -27,7 +32,7 @@ export class Task {
   @Column({
     type: 'enum',
     enum: Status,
-    default:Status.todo,
+    default: Status.todo,
   })
   status: Status;
 }
