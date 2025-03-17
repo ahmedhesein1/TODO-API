@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TaskController = void 0;
+exports.taskController = void 0;
 const tasks_entity_1 = require("./tasks.entity");
 const __1 = require("..");
 const class_transformer_1 = require("class-transformer");
@@ -32,4 +32,4 @@ class TaskController {
         });
     }
 }
-exports.TaskController = TaskController;
+exports.taskController = new TaskController();

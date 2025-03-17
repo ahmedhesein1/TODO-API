@@ -19,12 +19,10 @@ const express_async_handler_1 = __importDefault(require("express-async-handler")
 const tasks_validator_1 = require("./tasks.validator");
 exports.taskRouter = (0, express_1.Router)();
 exports.taskRouter.get('/', (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const taskController = new tasks_controller_1.TaskController();
-    const allTasks = yield taskController.getAll();
+    const allTasks = yield tasks_controller_1.taskController.getAll();
     res.json(allTasks).status(200);
 })));
 exports.taskRouter.post('/', tasks_validator_1.createValidator, (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const taskController = new tasks_controller_1.TaskController();
-    const newTask = yield taskController.createTask(req.body);
+    const newTask = yield tasks_controller_1.taskController.createTask(req.body);
     res.json(newTask).status(201);
 })));
