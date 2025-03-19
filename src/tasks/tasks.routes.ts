@@ -16,7 +16,7 @@ taskRouter
 taskRouter
   .route('/:id')
   .get(taskController.getById)
-  .patch(
+  .patch(validateRequest,
     taskController.updateTask,
   )
   .delete(taskController.deleteTask);

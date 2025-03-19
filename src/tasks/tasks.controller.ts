@@ -1,13 +1,7 @@
 import { Task } from './tasks.entity';
 import { AppDataSource } from '..';
-import {
-  instanceToPlain,
-} from 'class-transformer';
-import {
-  Response,
-  Request,
-  NextFunction,
-} from 'express';
+import { instanceToPlain } from 'class-transformer';
+import { Response, Request, NextFunction } from 'express';
 import AppError from '../middlewares/AppError';
 import asyncHandler from 'express-async-handler';
 
