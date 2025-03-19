@@ -2,18 +2,22 @@ import express, { Express } from 'express';
 import dotenv from 'dotenv';
 import { DataSource } from 'typeorm';
 import mysql from 'mysql2/promise';
-import bodyParser from 'body-parser';
 import cors from 'cors';
+import bodyParser from 'body-parser';
+
 import { Task } from './tasks/tasks.entity';
 import { globalErrorHandler } from './middlewares/globalErrorHandler';
 
 dotenv.config();
+
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
 
+// Middlewares
 app.use(bodyParser.json());
 app.use(cors());
 
+// Database Connection (TypeORM)
 export const AppDataSource = new DataSource({
   type: 'mysql',
   host: process.env.MYSQL_HOST || 'localhost',
@@ -24,37 +28,53 @@ export const AppDataSource = new DataSource({
   entities: [Task],
   synchronize: true,
 });
+import { taskRouter } from './tasks/tasks.routes';
 
+// Ensure Database Exists
 const createDatabase = async () => {
-  const connection = await mysql.createConnection({
-    host: process.env.MYSQL_HOST || 'localhost',
-    port: Number(process.env.MYSQL_PORT) || 3306,
-    user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD,
-  });
-  
-  await connection.query(
-    `CREATE DATABASE IF NOT EXISTS \`${process.env.MYSQL_DB}\``,
-  );
-  await connection.end();
-  console.log('✅ Database ensured');
+  try {
+    const connection = await mysql.createConnection({
+      host: process.env.MYSQL_HOST || 'localhost',
+      port: Number(process.env.MYSQL_PORT) || 3306,
+      user: process.env.MYSQL_USER,
+      password: process.env.MYSQL_PASSWORD,
+    });
+
+    await connection.query(
+      `CREATE DATABASE IF NOT EXISTS \`${process.env.MYSQL_DB}\``,
+    );
+    await connection.end();
+    console.log('✅ Database ensured');
+  } catch (error) {
+    console.error('❌ Error ensuring database:', error);
+    process.exit(1);
+  }
 };
 
-// Run this function before initializing TypeORM
-import { taskRouter } from './tasks/tasks.routes';
+// Initialize Database & Start Server
+const initializeDatabase = async () => {
+  await createDatabase();
+  console.log('✅ Database check complete');
+
+  try {
+    await AppDataSource.initialize();
+    console.log('✅ Database initialized');
+
+    app.listen(PORT, () =>
+      console.log(`🚀 Server running on port ${PORT}`),
+    );
+  } catch (error) {
+    console.error(
+      '❌ Error during database initialization:',
+      error,
+    );
+    process.exit(1);
+  }
+};
+
+// Routes
 app.use('/tasks', taskRouter);
 app.use(globalErrorHandler);
-createDatabase().then(() => {
-  console.log('✅ Database check complete');
-  
-  AppDataSource.initialize()
-  .then(() => {
-      console.log(`✅ Database initialized`);
-      app.listen(PORT, () => {
-        console.log(`🚀 App listening on ${PORT}`);
-      });
-    })
-    .catch((err) => {
-      console.error('❌ Error during initialization', err);
-    });
-});
+
+// Start Application
+initializeDatabase();

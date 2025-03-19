@@ -2,17 +2,14 @@ import { Task } from './tasks.entity';
 import { AppDataSource } from '..';
 import {
   instanceToPlain,
-  plainToInstance,
 } from 'class-transformer';
 import {
   Response,
   Request,
   NextFunction,
-  response,
 } from 'express';
 import AppError from '../middlewares/AppError';
 import asyncHandler from 'express-async-handler';
-import { UpdateResult } from 'typeorm';
 
 class TaskController {
   private taskRepository =
