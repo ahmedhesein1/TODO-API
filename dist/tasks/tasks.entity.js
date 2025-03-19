@@ -29,14 +29,18 @@ __decorate([
 ], Task.prototype, "title", void 0);
 __decorate([
     (0, typeorm_1.Column)({
-        type: 'longtext',
-    }),
-    (0, typeorm_1.Column)({
         type: 'varchar',
         length: 255,
     }),
     __metadata("design:type", String)
 ], Task.prototype, "date", void 0);
+__decorate([
+    (0, typeorm_1.Column)({
+        type: 'varchar',
+        length: 255,
+    }),
+    __metadata("design:type", String)
+], Task.prototype, "description", void 0);
 __decorate([
     (0, typeorm_1.Column)({
         type: 'enum',
