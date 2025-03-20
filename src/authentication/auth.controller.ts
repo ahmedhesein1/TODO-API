@@ -19,7 +19,7 @@ declare module 'express' {
   }
 }
 
-class UserController {
+class AuthController {
   private userRepository =
     AppDataSource.getRepository(User);
 
@@ -162,7 +162,20 @@ class UserController {
       },
     );
   };
-
-
+  public logout = asyncHandler(
+    async (
+      req: Request,
+      res: Response,
+      next: NextFunction,
+    ) => {
+      res.clearCookie('token');
+      res
+        .status(200)
+        .json({
+          success: true,
+          message: 'Logged Out successfully',
+        });
+    },
+  );
 }
-export const userController = new UserController();
+export const authController = new AuthController();
