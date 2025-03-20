@@ -28,7 +28,11 @@ export const AppDataSource = new DataSource({
   entities: [Task],
   synchronize: true,
 });
+
+// Routes
 import { taskRouter } from './tasks/tasks.routes';
+import { authRoutes } from './authentication/auth.routes'; 
+
 
 // Ensure Database Exists
 const createDatabase = async () => {
@@ -74,6 +78,7 @@ const initializeDatabase = async () => {
 
 // Routes
 app.use('/tasks', taskRouter);
+app.use('/auth',authRoutes);
 app.use(globalErrorHandler);
 
 // Start Application

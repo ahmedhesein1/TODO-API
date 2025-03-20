@@ -16,6 +16,7 @@ exports.authController = void 0;
 const user_entity_1 = require("./user.entity");
 const __1 = require("..");
 const class_transformer_1 = require("class-transformer");
+const Role_1 = require("../enums/Role");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const AppError_1 = __importDefault(require("../middlewares/AppError"));
@@ -40,7 +41,7 @@ class AuthController {
                 name,
                 email,
                 password: hashedPassword,
-                role: role || 'user',
+                role: role || Role_1.Role.user,
             });
             yield this.userRepository.save(newUser);
             const token = this.generateToken(newUser);
@@ -82,14 +83,14 @@ class AuthController {
         this.protect = (0, express_async_handler_1.default)((req, res, next) => __awaiter(this, void 0, void 0, function* () {
             const token = req.cookies.token;
             if (!token)
-                return next(new AppError_1.default('You Are Not Authorized', 404));
+                return next(new AppError_1.default('You Are Not Authorized', 401));
             const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
-            req.params.id = decoded.id;
             const user = yield this.userRepository.findOneBy({
                 id: decoded.id,
             });
             if (!user)
                 return next(new AppError_1.default('User Not Found', 404));
+            req.user = user;
             decoded
                 ? next()
                 : next(new AppError_1.default('User Not Found', 404));

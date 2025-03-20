@@ -1,24 +1,30 @@
 import { Router } from 'express';
 import { authController } from './auth.controller';
 import { userController } from './user.controller';
-export const router: Router = Router();
-router.get(
+import { Role } from '../enums/Role';
+export const authRoutes: Router = Router();
+authRoutes.get(
   '/',
   authController.protect,
-  authController.restrictTo('admin'),
+  authController.restrictTo(Role.admin),
   userController.getAll,
 );
-router
+authRoutes
   .route('/:id')
   .get(
     authController.protect,
-    authController.restrictTo('admin'),
+    authController.restrictTo(Role.admin),
     userController.getUserById,
   )
   .patch(
     authController.protect,
-    authController.restrictTo('admin'),
+    authController.restrictTo(Role.admin),
     userController.updateUserRole,
   );
-router.post('/signup', authController.signUp);
-router.post('/login', authController.login);
+authRoutes.post('/signup', authController.signUp);
+authRoutes.post('/login', authController.login);
+authRoutes.get(
+  '/logout',
+  authController.protect,
+  authController.logout,
+);

@@ -38,7 +38,9 @@ exports.AppDataSource = new typeorm_1.DataSource({
     entities: [tasks_entity_1.Task],
     synchronize: true,
 });
+// Routes
 const tasks_routes_1 = require("./tasks/tasks.routes");
+const auth_routes_1 = require("./authentication/auth.routes");
 // Ensure Database Exists
 const createDatabase = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -73,6 +75,7 @@ const initializeDatabase = () => __awaiter(void 0, void 0, void 0, function* () 
 });
 // Routes
 app.use('/tasks', tasks_routes_1.taskRouter);
+app.use('/auth', auth_routes_1.authRoutes);
 app.use(globalErrorHandler_1.globalErrorHandler);
 // Start Application
 initializeDatabase();

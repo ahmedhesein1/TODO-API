@@ -3,7 +3,6 @@ import { AppDataSource } from '..';
 import { instanceToPlain } from 'class-transformer';
 import { Request, Response, NextFunction } from 'express';
 import { Role } from '../enums/Role';
-import bcrypt from 'bcryptjs';
 import asyncHandler from 'express-async-handler';
 import AppError from '../middlewares/AppError';
 class UserController {

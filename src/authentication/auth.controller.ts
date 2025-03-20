@@ -2,6 +2,7 @@ import { User } from './user.entity';
 import { AppDataSource } from '..';
 import { instanceToPlain } from 'class-transformer';
 import { Request, Response, NextFunction } from 'express';
+import { Role } from '../enums/Role';
 import bcrypt from 'bcryptjs';
 import asyncHandler from 'express-async-handler';
 import AppError from '../middlewares/AppError';
@@ -64,7 +65,7 @@ class AuthController {
         name,
         email,
         password: hashedPassword,
-        role: role || 'user',
+        role: role || Role.user,
       });
       await this.userRepository.save(newUser);
       const token = this.generateToken(newUser);
@@ -128,18 +129,18 @@ class AuthController {
       const token = req.cookies.token;
       if (!token)
         return next(
-          new AppError('You Are Not Authorized', 404),
+          new AppError('You Are Not Authorized', 401),
         );
       const decoded = jwt.verify(
         token,
         process.env.JWT_SECRET!,
       ) as TokenPayload;
-      req.params.id = decoded.id;
       const user = await this.userRepository.findOneBy({
         id: decoded.id,
       });
       if (!user)
         return next(new AppError('User Not Found', 404));
+      req.user = user;
       decoded
         ? next()
         : next(new AppError('User Not Found', 404));
@@ -147,7 +148,7 @@ class AuthController {
   );
 
   // Restrict To middleware
-  public restrictTo = (...roles: string[]) => {
+  public restrictTo = (...roles: Role[]) => {
     return asyncHandler(
       async (
         req: Request,
