@@ -133,7 +133,7 @@ class AuthController {
         );
       const decoded = jwt.verify(
         token,
-        process.env.JWT_SECRET!,
+        process.env.JWT_SECRET as string,
       ) as TokenPayload;
       const user = await this.userRepository.findOneBy({
         id: decoded.id,
