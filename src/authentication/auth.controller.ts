@@ -93,8 +93,9 @@ class AuthController {
         return next(
           new AppError('Please provide all fields', 400),
         );
-      const user = await this.userRepository.findOneBy({
-        email,
+      const user = await this.userRepository.findOne({
+        where: { email },
+        select: ['email', 'password'],
       });
       if (!user)
         return next(new AppError('User Not Found', 404));
@@ -170,12 +171,10 @@ class AuthController {
       next: NextFunction,
     ) => {
       res.clearCookie('token');
-      res
-        .status(200)
-        .json({
-          success: true,
-          message: 'Logged Out successfully',
-        });
+      res.status(200).json({
+        success: true,
+        message: 'Logged Out successfully',
+      });
     },
   );
 }
